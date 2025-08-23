@@ -1,19 +1,7 @@
 // vision/trump.js
 import cv from 'opencv4nodejs';
 import { THRESH } from './config.js';
-import fs from 'node:fs';
-import path from 'node:path';
-
-function loadTemplates(dir) {
-  const files = fs.readdirSync(dir).filter(f => f.endsWith('.png'));
-  return files.map(f => ({
-    name: path.basename(f, '.png'),
-    mat: cv.imdecode(fs.readFileSync(path.join(dir, f)))
-  }));
-}
-
-const rankTemplates = loadTemplates('vision/templates/ranks'); // A,K,Q,J,10,...
-const suitTemplates = loadTemplates('vision/templates/suits'); // spade, heart, diamond, club
+import { rankTemplates, suitTemplates } from './templates.js';
 
 function bestMatch(graySrc, tmpl) {
   const res = graySrc.matchTemplate(tmpl, cv.TM_CCOEFF_NORMED);
