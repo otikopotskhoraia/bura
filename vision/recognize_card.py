@@ -12,6 +12,8 @@ def main():
     img_path = sys.argv[1]
     img = cv.imread(img_path)
     result = detect_card_in_slot(img, rank_templates, suit_templates)
+    if result["debug_img"] is not None:
+        cv.imwrite("match_debug.png", result["debug_img"])
     if result["card"]:
         print(f"Detected {result['card']} (confidence: {result['conf']:.2f})")
     else:
