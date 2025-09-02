@@ -1,6 +1,6 @@
-# vision/templates.py
-import cv2 as cv
+# vision/templates/__init__.py
 import os
+import cv2 as cv
 
 
 def load_templates(directory):
@@ -11,10 +11,10 @@ def load_templates(directory):
         mat = cv.imread(path)
         name = f
         while name.lower().endswith('.png'):
-            name = name[: -4]
+            name = name[:-4]
         templates.append({"name": name, "mat": mat})
     return templates
 
 base_dir = os.path.dirname(__file__)
-rank_templates = load_templates(os.path.join(base_dir, 'templates', 'ranks'))
-suit_templates = load_templates(os.path.join(base_dir, 'templates', 'suits'))
+rank_templates = load_templates(os.path.join(base_dir, 'ranks'))
+suit_templates = load_templates(os.path.join(base_dir, 'suits'))
