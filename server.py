@@ -11,7 +11,7 @@ def index():
     return "✅ Dummy server running"
 
 if __name__ == "__main__":
-    img_path = ""
+    img_path = "./sample.png "
     try:
         img = cv.imread(img_path)
         result = detect_card_in_slot(img, rank_templates, suit_templates)
