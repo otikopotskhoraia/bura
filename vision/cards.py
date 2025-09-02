@@ -4,15 +4,16 @@ from .config import THRESH
 
 
 def detect_card_in_slot(bgr_slot_mat, rank_tmps, suit_tmps):
+    """Identify the card present in a slot image.
+
+    Previously the template matching was restricted to a small glyph region in
+    the upper-left corner of the slot.  To allow matching on the entire slot,
+    use the full grayscale image instead of a cropped rectangle.
+    """
     gray = cv.cvtColor(bgr_slot_mat, cv.COLOR_BGR2GRAY)
-    glyph_rect = (
-        5,
-        5,
-        max(20, int(gray.shape[1] * 0.45)),
-        max(25, int(gray.shape[0] * 0.35)),
-    )
-    x, y, w, h = glyph_rect
-    glyph = gray[y:y+h, x:x+w]
+    x, y = 0, 0
+    h, w = gray.shape
+    glyph = gray
 
     best_rank = {"name": None, "score": 0, "loc": None, "shape": None}
     for r in rank_tmps:
