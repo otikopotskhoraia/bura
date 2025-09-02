@@ -18,4 +18,8 @@ THRESH = {
     "ocrPad": 4,
     "matchMinScore": 0.72,
     "confirmFrames": 2,
+    # Maximum allowed distance between the centers of the detected
+    # rank and suit glyphs in pixels.  A larger separation implies the
+    # glyphs likely come from different cards.
+    "glyphMaxDist": 50,
 }

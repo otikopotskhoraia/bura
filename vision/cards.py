@@ -1,5 +1,6 @@
 # vision/cards.py
 import cv2 as cv
+from math import hypot
 from .config import THRESH
 
 
@@ -43,9 +44,11 @@ def detect_card_in_slot(bgr_slot_mat, rank_tmps, suit_tmps):
 
     annotated = bgr_slot_mat.copy()
     cv.rectangle(annotated, (x, y), (x + w, y + h), (0, 255, 0), 1)
+    rank_center = None
     if best_rank["loc"] and best_rank["shape"]:
         rx, ry = best_rank["loc"]
         rw, rh = best_rank["shape"]
+        rank_center = (rx + rw / 2, ry + rh / 2)
         cv.rectangle(
             annotated,
             (x + rx, y + ry),
@@ -53,9 +56,11 @@ def detect_card_in_slot(bgr_slot_mat, rank_tmps, suit_tmps):
             (255, 0, 0),
             1,
         )
+    suit_center = None
     if best_suit["loc"] and best_suit["shape"]:
         sx, sy = best_suit["loc"]
         sw, sh = best_suit["shape"]
+        suit_center = (sx + sw / 2, sy + sh / 2)
         cv.rectangle(
             annotated,
             (x + sx, y + sy),
@@ -69,10 +74,16 @@ def detect_card_in_slot(bgr_slot_mat, rank_tmps, suit_tmps):
         best_rank["score"] >= THRESH["matchMinScore"]
         and best_suit["score"] >= THRESH["matchMinScore"]
     ):
-        result.update(
-            {
-                "card": f"{best_rank['name']}-{best_suit['name']}",
-                "conf": min(best_rank["score"], best_suit["score"]),
-            }
-        )
+        too_far = False
+        if rank_center and suit_center:
+            dist = hypot(rank_center[0] - suit_center[0], rank_center[1] - suit_center[1])
+            if dist > THRESH.get("glyphMaxDist", float("inf")):
+                too_far = True
+        if not too_far:
+            result.update(
+                {
+                    "card": f"{best_rank['name']}-{best_suit['name']}",
+                    "conf": min(best_rank["score"], best_suit["score"]),
+                }
+            )
     return result
