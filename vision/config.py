@@ -16,7 +16,7 @@ ROI = {
 THRESH = {
     "greenHSV": {"low": [45, 80, 60], "high": [85, 255, 255]},
     "ocrPad": 4,
-    "matchMinScore": 0.6,
+    "matchMinScore": 0.5,
     "confirmFrames": 2,
     # Maximum allowed distance between the centers of the detected
     # rank and suit glyphs in pixels.  A larger separation implies the
