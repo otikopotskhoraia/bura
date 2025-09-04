@@ -7,9 +7,8 @@ from .config import THRESH
 def detect_card_in_slot(bgr_slot_mat, rank_tmps, suit_tmps):
     """Identify the card present in a slot image.
 
-    Previously the template matching was restricted to a small glyph region in
-    the upper-left corner of the slot.  To allow matching on the entire slot,
-    use the full grayscale image instead of a cropped rectangle.
+    Match rank and suit templates against the full slot image and return the
+    best combined result when both exceed the configured threshold.
     """
     gray = cv.cvtColor(bgr_slot_mat, cv.COLOR_BGR2GRAY)
     x, y = 0, 0
