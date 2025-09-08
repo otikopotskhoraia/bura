@@ -19,18 +19,33 @@ def detect_card_in_slot(bgr_slot_mat, rank_tmps, suit_tmps):
     annotated = bgr_slot_mat.copy()
     cv.rectangle(annotated, (0, 0), (w, h), (0, 255, 0), 1)
 
+    # In a typical playing card the small rank and suit glyphs sit together in
+    # the top-left corner.  When matching across the whole slot image
+    # ``matchTemplate`` can produce many false positives from the larger suit
+    # graphics in the middle of the card.  These spurious matches were paired
+    # up and frequently produced incorrect results (e.g. reporting ``10-heart``
+    # for cards that were clearly not 10s).  To mirror the behaviour of the
+    # stand-alone test scripts, restrict the search area to the top-left portion
+    # of the slot where the rank/suit glyphs are expected.
+
+    search_w = int(w * 0.5)
+    search_h = int(h * 0.5)
+
     rank_candidates = []
     for r in rank_tmps:
         t_gray = cv.cvtColor(r["mat"], cv.COLOR_BGR2GRAY)
         res = cv.matchTemplate(gray, t_gray, cv.TM_CCOEFF_NORMED)
         ys, xs = np.where(res >= THRESH["matchMinScore"])
         for (x, y) in zip(xs, ys):
-            rank_candidates.append({
-                "name": r["name"],
-                "score": float(res[y, x]),
-                "loc": (int(x), int(y)),
-                "shape": t_gray.shape[::-1],
-            })
+            if (x <= search_w and y <= search_h) or (
+                x >= w - search_w and y >= h - search_h
+            ):
+                rank_candidates.append({
+                    "name": r["name"],
+                    "score": float(res[y, x]),
+                    "loc": (int(x), int(y)),
+                    "shape": t_gray.shape[::-1],
+                })
 
     suit_candidates = []
     for s in suit_tmps:
@@ -38,12 +53,15 @@ def detect_card_in_slot(bgr_slot_mat, rank_tmps, suit_tmps):
         res = cv.matchTemplate(gray, t_gray, cv.TM_CCOEFF_NORMED)
         ys, xs = np.where(res >= THRESH["matchMinScore"])
         for (x, y) in zip(xs, ys):
-            suit_candidates.append({
-                "name": s["name"],
-                "score": float(res[y, x]),
-                "loc": (int(x), int(y)),
-                "shape": t_gray.shape[::-1],
-            })
+            if (x <= search_w and y <= search_h) or (
+                x >= w - search_w and y >= h - search_h
+            ):
+                suit_candidates.append({
+                    "name": s["name"],
+                    "score": float(res[y, x]),
+                    "loc": (int(x), int(y)),
+                    "shape": t_gray.shape[::-1],
+                })
 
     best = None
     for r in rank_candidates:
