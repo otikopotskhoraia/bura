@@ -16,10 +16,13 @@ ROI = {
 THRESH = {
     "greenHSV": {"low": [45, 80, 60], "high": [85, 255, 255]},
     "ocrPad": 4,
-    "matchMinScore": 0.5,
+    # Minimum template-matching score for a glyph to be considered.
+    # Lowering this slightly helps pick up weaker suit symbols.
+    "matchMinScore": 0.4,
     "confirmFrames": 2,
     # Maximum allowed distance between the centers of the detected
     # rank and suit glyphs in pixels.  A larger separation implies the
-    # glyphs likely come from different cards.
-    "glyphMaxDist": 50,
+    # glyphs likely come from different cards.  Tune as needed; a smaller
+    # value (e.g. ~10) enforces stricter proximity.
+    "glyphMaxDist": 25,
 }
