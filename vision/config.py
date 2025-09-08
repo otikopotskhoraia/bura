@@ -7,9 +7,13 @@ ROI = {
     "trumpSlot": {"x": 1265, "y": 235, "w": 55, "h": 85},
     "tableCenter": {"x": 900, "y": 330, "w": 400, "h": 280},
     "handSlots": [
-        {"x": 855, "y": 700, "w": 113, "h": 145},
-        {"x": 973, "y": 700, "w": 113, "h": 145},
-        {"x": 1091,"y": 700, "w": 113, "h": 145},
+        # Original ``y`` coordinate placed the crop slightly above the actual
+        # cards, which meant the rank/suit glyphs were cut off and template
+        # matching struggled.  Shift the slot windows downward so each card is
+        # fully captured.
+        {"x": 855, "y": 791, "w": 113, "h": 145},
+        {"x": 973, "y": 791, "w": 113, "h": 145},
+        {"x": 1091,"y": 791, "w": 113, "h": 145},
     ],
 }
 
@@ -21,8 +25,10 @@ THRESH = {
     "matchMinScore": 0.4,
     "confirmFrames": 2,
     # Maximum allowed distance between the centers of the detected
-    # rank and suit glyphs in pixels.  A larger separation implies the
-    # glyphs likely come from different cards.  Tune as needed; a smaller
-    # value (e.g. ~10) enforces stricter proximity.
-    "glyphMaxDist": 25,
+    # rank and suit glyphs in pixels.  The previous limit was too strict for
+    # the captured resolution, causing genuine rank/suit pairs to be rejected
+    # (e.g. the "Q" and heart symbol were ~30px apart).  Relaxing this value
+    # allows legitimate pairs to be recognised while still filtering out
+    # distant false positives.
+    "glyphMaxDist": 40,
 }
