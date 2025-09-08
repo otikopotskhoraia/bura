@@ -20,7 +20,7 @@ def main():
     res = cv.matchTemplate(gray_img, gray_tpl, cv.TM_CCOEFF_NORMED)
     _, max_val, _, max_loc = cv.minMaxLoc(res)
     print(f"Best match score for 10: {max_val:.2f}")
-    threshold = 0.5
+    threshold = 0.9
     if max_val >= threshold:
         h, w = gray_tpl.shape
         top_left = max_loc
