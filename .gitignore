@@ -2,3 +2,4 @@ node_modules/
 __pycache__/
 *.pyc
 *_debug.png
+*sample.png
