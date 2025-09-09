@@ -15,7 +15,6 @@ if __name__ == "__main__":
         img = cv.imread(img_path)
         if img is None:
             raise ValueError("Image data is empty")
-
         state = analyze_image(img)
         res = state["trump"]
         if res["rank"] and res["suit"]:
