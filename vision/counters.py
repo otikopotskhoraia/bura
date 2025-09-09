@@ -16,6 +16,9 @@ def read_green_number(bgr_roi_mat):
     inv = cv.bitwise_not(clean)
     up = cv.resize(inv, None, fx=2, fy=2, interpolation=cv.INTER_CUBIC)
     config = "--psm 7 -c tessedit_char_whitelist=0123456789"
-    text = pytesseract.image_to_string(up, config=config)
+    try:
+        text = pytesseract.image_to_string(up, config=config)
+    except pytesseract.TesseractNotFoundError:
+        text = ""
     m = re.search(r"\d+", text)
     return int(m.group()) if m else 0
