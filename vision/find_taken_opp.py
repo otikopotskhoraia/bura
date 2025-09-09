@@ -2,7 +2,7 @@ import sys
 import cv2 as cv
 from .config import ROI
 from .detect import map_roi
-from .counters import read_green_number
+from .counters import match_counter
 
 
 def main():
@@ -15,7 +15,7 @@ def main():
         return
     shot_h, shot_w = img.shape[:2]
     x, y, w, h = map_roi(ROI['takenOpp'], shot_w, shot_h, shot_w, shot_h)
-    count = read_green_number(img[y:y+h, x:x+w])
+    count = match_counter(img[y:y+h, x:x+w])
     print(f"takenOpp count: {count}")
     cv.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
     cv.putText(

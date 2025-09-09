@@ -18,3 +18,4 @@ def load_templates(directory):
 base_dir = os.path.dirname(__file__)
 rank_templates = load_templates(os.path.join(base_dir, 'ranks'))
 suit_templates = load_templates(os.path.join(base_dir, 'suits'))
+counter_templates = load_templates(os.path.join(base_dir, 'counters'))

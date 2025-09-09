@@ -4,6 +4,7 @@ import numpy as np
 import pytesseract
 import re
 from .config import THRESH
+from .templates import counter_templates
 
 
 def read_green_number(bgr_roi_mat):
@@ -22,3 +23,28 @@ def read_green_number(bgr_roi_mat):
         text = ""
     m = re.search(r"\d+", text)
     return int(m.group()) if m else 0
+
+
+def match_counter(bgr_roi_mat):
+    """Match the counter ROI against known templates.
+
+    Args:
+        bgr_roi_mat: cropped counter image.
+
+    Returns:
+        int: detected counter value or 0 if no match meets the threshold.
+    """
+    gray = cv.cvtColor(bgr_roi_mat, cv.COLOR_BGR2GRAY)
+    best = {"name": None, "score": 0}
+    for tmpl in counter_templates:
+        t_gray = cv.cvtColor(tmpl["mat"], cv.COLOR_BGR2GRAY)
+        res = cv.matchTemplate(gray, t_gray, cv.TM_CCOEFF_NORMED)
+        _, max_val, _, _ = cv.minMaxLoc(res)
+        if max_val > best["score"]:
+            best = {"name": tmpl["name"], "score": float(max_val)}
+    if best["score"] >= THRESH["matchMinScore"] and best["name"] is not None:
+        try:
+            return int(best["name"])
+        except ValueError:
+            return 0
+    return 0
