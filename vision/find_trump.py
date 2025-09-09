@@ -48,6 +48,20 @@ def main():
         print(
             f"Detected {best['rank']}-{best['suit']} (confidence: {best['conf']:.2f})"
         )
+        top_left = (x0, y0)
+        bottom_right = (x0 + size, y0 + size)
+        cv.rectangle(img, top_left, bottom_right, (0, 255, 0), 2)
+        cv.putText(
+            img,
+            f"{best['rank']}-{best['suit']}",
+            (x0, max(0, y0 - 10)),
+            cv.FONT_HERSHEY_SIMPLEX,
+            0.7,
+            (0, 255, 0),
+            2,
+        )
+        cv.imwrite("trump_match_debug.png", img)
+        print("Trump card highlighted in trump_match_debug.png")
     else:
         print("No trump card match found")
 
