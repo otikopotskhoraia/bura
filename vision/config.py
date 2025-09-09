@@ -5,9 +5,8 @@ ROI = {
     # Shift taken counters inward so the OCR crops are not tight against the
     # screen edges.  This provides a little extra margin around the green
     # numbers which helps recognition.
-    # Increase vertical margin to keep counters away from screen edges
-    "takenOpp":  {"x": 1510, "y": 180, "w": 80, "h": 55},
-    "takenMe":   {"x": 1510, "y": 790, "w": 80, "h": 55},
+    "takenOpp":  {"x": 1510, "y": 160, "w": 80, "h": 55},
+    "takenMe":   {"x": 1510, "y": 810, "w": 80, "h": 55},
     "trumpSlot": {"x": 1265, "y": 235, "w": 55, "h": 85},
     "tableCenter": {"x": 900, "y": 330, "w": 400, "h": 280},
     "handSlots": [
