@@ -24,6 +24,9 @@ if __name__ == "__main__":
         else:
             print("Trump: No trump card match found")
 
+        print(f"Taken by me: {state.get('takenMe', 0)}")
+        print(f"Taken by opponent: {state.get('takenOpp', 0)}")
+
         for slot in state["slots"]:
             idx = slot["slot"]
             if slot["debug_img"] is not None:
