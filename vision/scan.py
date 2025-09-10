@@ -38,10 +38,10 @@ def analyze_image(img):
 
     taken_me = taken_opp = 0
     if "takenMe" in ROI:
-        x, y, w, h = map_roi(ROI["takenMe"], shot_w, shot_h, 1920, 1080)
+        x, y, w, h = map_roi(ROI["takenMe"], shot_w, shot_h, shot_w, shot_h)
         taken_me = match_counter(img[y:y + h, x:x + w])
     if "takenOpp" in ROI:
-        x, y, w, h = map_roi(ROI["takenOpp"], shot_w, shot_h, 1920, 1080)
+        x, y, w, h = map_roi(ROI["takenOpp"], shot_w, shot_h, shot_w, shot_h)
         taken_opp = match_counter(img[y:y + h, x:x + w])
 
     return {
