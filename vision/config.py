@@ -7,7 +7,9 @@ ROI = {
     # numbers which helps recognition.
     "takenOpp":  {"x": 1510, "y": 110, "w": 80, "h": 55},
     "takenMe":   {"x": 1510, "y": 760, "w": 80, "h": 55},
-    "trumpSlot": {"x": 1265, "y": 235, "w": 55, "h": 85},
+    # Fixed location of the trump card: right edge near the vertical center.
+    # Use a larger window so the rank and suit glyphs are fully captured.
+    "trumpSlot": {"x": 1430, "y": 470, "w": 140, "h": 140},
     "tableCenter": {"x": 900, "y": 330, "w": 400, "h": 280},
     "handSlots": [
         # Original ``y`` coordinate placed the crop slightly above the actual
