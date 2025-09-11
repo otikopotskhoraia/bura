@@ -6,11 +6,13 @@ from .trump_search import find_trump_card
 from .counters import match_counter
 
 
-def analyze_image(img):
+def analyze_image(img, trump=None):
     """Detect trump card, taken counters, and hand slots from a screenshot.
 
     Args:
         img: BGR screenshot image.
+        trump: Optional precomputed trump result. If ``None`` the trump card
+            will be detected automatically.
 
     Returns:
         dict with keys 'trump', 'slots', 'takenMe', and 'takenOpp'.
@@ -22,7 +24,7 @@ def analyze_image(img):
     """
     shot_h, shot_w = img.shape[:2]
 
-    trump = find_trump_card(img)
+    trump = trump if trump is not None else find_trump_card(img)
 
     slots = []
     for idx, slot in enumerate(ROI.get("handSlots", [])):

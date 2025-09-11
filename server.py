@@ -1,6 +1,7 @@
 # server.py
 from flask import Flask
 import cv2 as cv
+from vision.trump_search import find_trump_card
 from vision.scan import analyze_image
 
 app = Flask(__name__)
@@ -15,15 +16,16 @@ if __name__ == "__main__":
         img = cv.imread(img_path)
         if img is None:
             raise ValueError("Image data is empty")
-        state = analyze_image(img)
-        res = state["trump"]
-        if res["rank"] and res["suit"]:
+
+        trump = find_trump_card(img)
+        if trump["rank"] and trump["suit"]:
             print(
-                f"Trump: {res['rank']}-{res['suit']} (confidence: {res['conf']:.2f})",
+                f"Trump: {trump['rank']}-{trump['suit']} (confidence: {trump['conf']:.2f})",
             )
         else:
             print("Trump: No trump card match found")
 
+        state = analyze_image(img, trump=trump)
         print(f"Taken by me: {state.get('takenMe', 0)}")
         print(f"Taken by opponent: {state.get('takenOpp', 0)}")
 
