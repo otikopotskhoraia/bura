@@ -1,8 +1,30 @@
+import os
 import sys
 import cv2 as cv
-from .config import ROI
+from .config import ROI, THRESH
 from .detect import map_roi
-from .counters import match_score
+from .templates import load_templates
+
+score_templates = load_templates(
+    os.path.join(os.path.dirname(__file__), "templates", "score")
+)
+
+
+def match_score(bgr_roi_mat):
+    gray = cv.cvtColor(bgr_roi_mat, cv.COLOR_BGR2GRAY)
+    best = {"name": None, "score": 0}
+    for tmpl in score_templates:
+        t_gray = cv.cvtColor(tmpl["mat"], cv.COLOR_BGR2GRAY)
+        res = cv.matchTemplate(gray, t_gray, cv.TM_CCOEFF_NORMED)
+        _, max_val, _, _ = cv.minMaxLoc(res)
+        if max_val > best["score"]:
+            best = {"name": tmpl["name"], "score": float(max_val)}
+    if best["score"] >= THRESH["matchMinScore"] and best["name"] is not None:
+        try:
+            return int(best["name"])
+        except ValueError:
+            return 0
+    return 0
 
 
 def main():
