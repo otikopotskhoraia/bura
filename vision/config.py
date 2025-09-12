@@ -10,6 +10,9 @@ ROI = {
     # New: Score counters (white numbers on left side)
     "scoreOpp": {"x": 70, "y": 95, "w": 90, "h": 50},   # top-left score
     "scoreMe":  {"x": 70, "y": 365, "w": 90, "h": 50},  # bottom-left score
+    # Duplicates for index 1 variants
+    "scoreOpp_1": {"x": 70, "y": 95, "w": 90, "h": 50},
+    "scoreMe_1":  {"x": 70, "y": 365, "w": 90, "h": 50},
     # Fixed location of the trump card: right edge near the vertical center.
     # Use a larger window so the rank and suit glyphs are fully captured.
     "trumpSlot": {"x": 1430, "y": 470, "w": 140, "h": 140},
