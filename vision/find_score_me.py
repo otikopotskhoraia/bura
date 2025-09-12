@@ -11,13 +11,6 @@ score_templates = load_templates(
 
 
 def match_score(bgr_roi_mat):
-    """Return the numeric score from a cropped ROI.
-
-    The score templates are named ``<n>.png`` where ``n`` is the integer
-    representation of the score (e.g. ``0.png`` -> ``0``).  Returning ``None``
-    allows callers to distinguish between a detected ``0`` and a failed match.
-    """
-
     gray = cv.cvtColor(bgr_roi_mat, cv.COLOR_BGR2GRAY)
     best = {"name": None, "score": 0.0}
     for tmpl in score_templates:
@@ -26,11 +19,10 @@ def match_score(bgr_roi_mat):
         _, max_val, _, _ = cv.minMaxLoc(res)
         if max_val > best["score"]:
             best = {"name": tmpl["name"], "score": float(max_val)}
-
     name = best["name"]
     if name and best["score"] >= THRESH["matchMinScore"] and name.isdigit():
         return int(name)
-    return None
+    return 0
 
 
 def main():
@@ -43,19 +35,12 @@ def main():
         return
     shot_h, shot_w = img.shape[:2]
     x, y, w, h = map_roi(ROI["scoreMe"], shot_w, shot_h, shot_w, shot_h)
-    pad = THRESH.get("ocrPad", 0)
-    x = max(0, x - pad)
-    y = max(0, y - pad)
-    w = min(w + 2 * pad, shot_w - x)
-    h = min(h + 2 * pad, shot_h - y)
-
-    score = match_score(img[y : y + h, x : x + w])
-    out_score = score if score is not None else 0
-    print(f"scoreMe: {out_score}")
+    count = match_score(img[y:y+h, x:x+w])
+    print(f"scoreMe count: {count}")
     cv.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
     cv.putText(
         img,
-        str(out_score),
+        str(count),
         (x, max(0, y - 10)),
         cv.FONT_HERSHEY_SIMPLEX,
         0.7,
@@ -68,3 +53,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
