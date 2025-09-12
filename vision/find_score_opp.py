@@ -11,20 +11,27 @@ score_templates = load_templates(
 
 
 def match_score(bgr_roi_mat):
+    """Return the numeric score from a cropped ROI.
+
+    Templates are named with their corresponding numeric value
+    (e.g. ``0.png`` -> ``0``).  ``None`` is returned when no match exceeds
+    the threshold so callers can tell the difference between an actual ``0``
+    score and a failed detection.
+    """
+
     gray = cv.cvtColor(bgr_roi_mat, cv.COLOR_BGR2GRAY)
-    best = {"name": None, "score": 0}
+    best = {"name": None, "score": 0.0}
     for tmpl in score_templates:
         t_gray = cv.cvtColor(tmpl["mat"], cv.COLOR_BGR2GRAY)
         res = cv.matchTemplate(gray, t_gray, cv.TM_CCOEFF_NORMED)
         _, max_val, _, _ = cv.minMaxLoc(res)
         if max_val > best["score"]:
             best = {"name": tmpl["name"], "score": float(max_val)}
-    if best["score"] >= THRESH["matchMinScore"] and best["name"] is not None:
-        try:
-            return int(best["name"])
-        except ValueError:
-            return 0
-    return 0
+
+    name = best["name"]
+    if name and best["score"] >= THRESH["matchMinScore"] and name.isdigit():
+        return int(name)
+    return None
 
 
 def main():
@@ -36,13 +43,20 @@ def main():
         print(f"Could not read image {sys.argv[1]}")
         return
     shot_h, shot_w = img.shape[:2]
-    x, y, w, h = map_roi(ROI['scoreOpp'], shot_w, shot_h, shot_w, shot_h)
-    score = match_score(img[y:y+h, x:x+w])
-    print(f"scoreOpp: {score}")
+    x, y, w, h = map_roi(ROI["scoreOpp"], shot_w, shot_h, shot_w, shot_h)
+    pad = THRESH.get("ocrPad", 0)
+    x = max(0, x - pad)
+    y = max(0, y - pad)
+    w = min(w + 2 * pad, shot_w - x)
+    h = min(h + 2 * pad, shot_h - y)
+
+    score = match_score(img[y : y + h, x : x + w])
+    out_score = score if score is not None else 0
+    print(f"scoreOpp: {out_score}")
     cv.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
     cv.putText(
         img,
-        str(score),
+        str(out_score),
         (x, max(0, y - 10)),
         cv.FONT_HERSHEY_SIMPLEX,
         0.7,

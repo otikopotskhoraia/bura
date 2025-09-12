@@ -8,8 +8,9 @@ ROI = {
     "takenOpp":  {"x": 1510, "y": 110, "w": 80, "h": 55},
     "takenMe":   {"x": 1510, "y": 760, "w": 80, "h": 55},
     # New: Score counters (white numbers on left side)
-    "scoreOpp": {"x": 100, "y": 315, "w": 90, "h": 50},   # top-left score
-    "scoreMe":  {"x": 100, "y": 570, "w": 90, "h": 50},  # bottom-left score
+    # Slightly enlarged score regions for more reliable detection.
+    "scoreOpp": {"x": 90, "y": 305, "w": 110, "h": 60},   # top-left score
+    "scoreMe":  {"x": 90, "y": 560, "w": 110, "h": 60},  # bottom-left score
     # Fixed location of the trump card: right edge near the vertical center.
     # Use a larger window so the rank and suit glyphs are fully captured.
     "trumpSlot": {"x": 1430, "y": 470, "w": 140, "h": 140},
@@ -27,7 +28,10 @@ ROI = {
 
 THRESH = {
     "greenHSV": {"low": [45, 80, 60], "high": [85, 255, 255]},
-    "ocrPad": 4,
+    # Extra padding (in pixels) applied around score ROIs before running
+    # template matching.  Enlarging this region helps when the configured ROI
+    # is slightly too tight and was clipping the digits.
+    "ocrPad": 8,
     # Minimum template-matching score for a glyph to be considered.
     # Lowering this slightly helps pick up weaker suit symbols.
     "matchMinScore": 0.4,
