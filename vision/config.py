@@ -8,8 +8,8 @@ ROI = {
     "takenOpp":  {"x": 1510, "y": 110, "w": 80, "h": 55},
     "takenMe":   {"x": 1510, "y": 760, "w": 80, "h": 55},
     # New: Score counters (white numbers on left side)
-    "scoreOpp": {"x": 70, "y": 95, "w": 90, "h": 50},   # top-left score
-    "scoreMe":  {"x": 70, "y": 365, "w": 90, "h": 50},  # bottom-left score
+    "scoreOpp": {"x": 100, "y": 315, "w": 90, "h": 50},   # top-left score
+    "scoreMe":  {"x": 100, "y": 570, "w": 90, "h": 50},  # bottom-left score
     # Fixed location of the trump card: right edge near the vertical center.
     # Use a larger window so the rank and suit glyphs are fully captured.
     "trumpSlot": {"x": 1430, "y": 470, "w": 140, "h": 140},
