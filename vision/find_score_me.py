@@ -1,28 +1,26 @@
 import os
 import sys
+import re
 import cv2 as cv
+import pytesseract
 from .config import ROI, THRESH
 from .detect import map_roi
-from .templates import load_templates
-
-score_templates = load_templates(
-    os.path.join(os.path.dirname(__file__), "templates", "score")
-)
-
 
 def match_score(bgr_roi_mat):
+    """OCR the white score numbers from the provided ROI."""
     gray = cv.cvtColor(bgr_roi_mat, cv.COLOR_BGR2GRAY)
-    best = {"name": None, "score": 0.0}
-    for tmpl in score_templates:
-        t_gray = cv.cvtColor(tmpl["mat"], cv.COLOR_BGR2GRAY)
-        res = cv.matchTemplate(gray, t_gray, cv.TM_CCOEFF_NORMED)
-        _, max_val, _, _ = cv.minMaxLoc(res)
-        if max_val > best["score"]:
-            best = {"name": tmpl["name"], "score": float(max_val)}
-    name = best["name"]
-    if name and best["score"] >= THRESH["matchMinScore"] and name.isdigit():
-        return int(name)
-    return 0
+    # Binarise to isolate bright (white) digits
+    _, thresh = cv.threshold(gray, 200, 255, cv.THRESH_BINARY)
+    inv = cv.bitwise_not(thresh)
+    # Upscale for better OCR accuracy
+    up = cv.resize(inv, None, fx=2, fy=2, interpolation=cv.INTER_CUBIC)
+    config = "--psm 7 -c tessedit_char_whitelist=0123456789"
+    try:
+        text = pytesseract.image_to_string(up, config=config)
+    except pytesseract.TesseractNotFoundError:
+        text = ""
+    m = re.search(r"\d+", text)
+    return int(m.group()) if m else 0
 
 
 def main():
@@ -35,7 +33,12 @@ def main():
         return
     shot_h, shot_w = img.shape[:2]
     x, y, w, h = map_roi(ROI["scoreMe"], shot_w, shot_h, shot_w, shot_h)
-    count = match_score(img[y:y+h, x:x+w])
+    pad = THRESH.get("ocrPad", 0)
+    x = max(0, x - pad)
+    y = max(0, y - pad)
+    w = min(w + pad * 2, shot_w - x)
+    h = min(h + pad * 2, shot_h - y)
+    count = match_score(img[y:y + h, x:x + w])
     print(f"scoreMe count: {count}")
     cv.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
     cv.putText(
