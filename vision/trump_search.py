@@ -3,6 +3,9 @@ from .config import ROI
 from .detect import map_roi
 from .trump import detect_trump
 
+# Minimum confidence required to accept a detected trump card
+MIN_TRUMP_CONF = 0.9
+
 
 def find_trump_card(img):
     """Detect the trump card from a fixed slot on the screenshot.
@@ -31,4 +34,12 @@ def find_trump_card(img):
         if res["conf"] > best["conf"]:
             best = res
 
-    return {**best, "bbox": (x, y, rw, rh)}
+    result = {**best, "bbox": (x, y, rw, rh)}
+    if (
+        result["conf"] < MIN_TRUMP_CONF
+        or not result["rank"]
+        or not result["suit"]
+    ):
+        result["rank"] = None
+        result["suit"] = None
+    return result
