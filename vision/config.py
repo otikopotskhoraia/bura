@@ -9,7 +9,7 @@ ROI = {
     "takenMe":   {"x": 1510, "y": 760, "w": 80, "h": 55},
     # New: Score counters (white numbers on left side)
     # Slightly enlarged score regions for more reliable detection.
-    "scoreOpp": {"x": 90, "y": 305, "w": 110, "h": 60},   # top-left score
+    "scoreOpp": {"x": 120, "y": 295, "w": 90, "h": 80},   # top-left score
     "scoreMe":  {"x": 90, "y": 560, "w": 110, "h": 60},  # bottom-left score
     # Fixed location of the trump card: right edge near the vertical center.
     # Use a larger window so the rank and suit glyphs are fully captured.
