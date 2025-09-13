@@ -229,7 +229,7 @@ def match_score(bgr_roi_mat, base_dir, debug_dir=None):
         return v
 
     # Load templates (and log)
-    templates, tmpl_dir = _load_templates(os.path.dirname(__file__))
+    templates, tmpl_dir = _load_templates(base_dir)
     if debug_dir:
         with open(os.path.join(debug_dir, "templates_loaded.txt"), "w", encoding="utf-8") as f:
             f.write(f"template_dir={tmpl_dir}\n")
