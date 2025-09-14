@@ -29,6 +29,7 @@ if __name__ == "__main__":
         state = analyze_image(img, trump=trump)
         print(f"Taken by me: {state.get('takenMe', 0)}")
         print(f"Taken by opponent: {state.get('takenOpp', 0)}")
+        print(f"Offered doubling: {state.get('hasOfferedDoubling', False)}")
 
         scores = find_scores(img)
         print(f"Score me: {scores['me']}")

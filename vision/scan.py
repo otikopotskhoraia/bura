@@ -4,6 +4,7 @@ from .config import ROI
 from .detect import map_roi
 from .trump_search import find_trump_card
 from .counters import match_counter
+from .doubling_offer import detect_doubling_popup
 
 
 def analyze_image(img, trump=None):
@@ -15,12 +16,13 @@ def analyze_image(img, trump=None):
             will be detected automatically.
 
     Returns:
-        dict with keys 'trump', 'slots', 'takenMe', and 'takenOpp'.
-        'trump' is the result from ``find_trump_card``.
-        'slots' is a list of dictionaries with keys 'slot', 'card', 'conf',
-        and 'debug_img'.
-        'takenMe' and 'takenOpp' are integers representing how many cards
-        have been taken by the player and opponent respectively.
+        dict with keys 'trump', 'slots', 'takenMe', 'takenOpp', and
+        'hasOfferedDoubling'.  'trump' is the result from
+        ``find_trump_card``.  'slots' is a list of dictionaries with keys
+        'slot', 'card', 'conf', and 'debug_img'.  'takenMe' and 'takenOpp'
+        are integers representing how many cards have been taken by the
+        player and opponent respectively.  'hasOfferedDoubling' is a bool
+        indicating whether a doubling popup is visible near the table center.
     """
     shot_h, shot_w = img.shape[:2]
 
@@ -46,9 +48,12 @@ def analyze_image(img, trump=None):
         x, y, w, h = map_roi(ROI["takenOpp"], shot_w, shot_h, shot_w, shot_h)
         taken_opp = match_counter(img[y:y + h, x:x + w])
 
+    has_offered_doubling = detect_doubling_popup(img)
+
     return {
         "trump": trump,
         "slots": slots,
         "takenMe": taken_me,
         "takenOpp": taken_opp,
+        "hasOfferedDoubling": has_offered_doubling,
     }
