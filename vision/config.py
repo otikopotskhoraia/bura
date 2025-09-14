@@ -15,6 +15,10 @@ ROI = {
     # Use a larger window so the rank and suit glyphs are fully captured.
     "trumpSlot": {"x": 1430, "y": 470, "w": 140, "h": 140},
     "tableCenter": {"x": 900, "y": 330, "w": 400, "h": 280},
+    # NEW: Central modal/popup area (confirmation dialogs, raises, etc.).
+    # Sized to include the title and the three buttons (Yes/No/All-in).
+    # Tune if your resolution/layout changes.
+    "centerPopup": {"x": 700, "y": 250, "w": 700, "h": 420},
     "handSlots": [
         # Original ``y`` coordinate placed the crop slightly above the actual
         # cards, which meant the rank/suit glyphs were cut off and template
