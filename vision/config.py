@@ -24,21 +24,17 @@ ROI = {
         # cards, which meant the rank/suit glyphs were cut off and template
         # matching struggled.  Shift the slot windows downward so each card is
         # fully captured.
-        {"x": 855, "y": 370, "w": 113, "h": 180},
-        {"x": 973, "y": 370, "w": 113, "h": 180},
-        {"x": 1091,"y": 370, "w": 113, "h": 180},
+        {"x": 855, "y": 791, "w": 113, "h": 145},
+        {"x": 973, "y": 791, "w": 113, "h": 145},
+        {"x": 1091,"y": 791, "w": 113, "h": 145},
     ],
     # New: table slots for cards played to the middle of the table.  These use
     # the same x-offsets as the player hand, but are vertically centered on the
     # felt so cards laid on the table are fully captured for recognition.
     "centerSlots": [
-        # Shift the center slot windows downward and slightly to the right so
-        # the captured crops line up with the actual cards on the felt.  The
-        # tighter width/height keeps the template matching focused on the
-        # glyph corner of each card instead of excess table background.
-        {"x": 907, "y": 560, "w": 120, "h": 170},
-        {"x": 1025, "y": 560, "w": 120, "h": 170},
-        {"x": 1143, "y": 560, "w": 120, "h": 170},
+        {"x": 855, "y": 370, "w": 113, "h": 180},
+        {"x": 973, "y": 370, "w": 113, "h": 180},
+        {"x": 1091,"y": 370, "w": 113, "h": 180},
     ],
 }
 
