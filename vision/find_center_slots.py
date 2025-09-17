@@ -7,6 +7,7 @@ from .detect import map_roi
 from .templates import rank_templates, suit_templates
 
 CONF_THRESHOLD = 0.9
+CENTER_SLOT_Y_CANDIDATES = (370, 460)
 
 
 def main():
@@ -27,9 +28,28 @@ def main():
     annotated = img.copy()
 
     for idx, slot in enumerate(ROI["centerSlots"]):
-        x, y, w, h = map_roi(slot, shot_w, shot_h, 1920, 1080)
-        crop = img[y:y + h, x:x + w]
-        result = detect_card_in_slot(crop, rank_templates, suit_templates)
+        best_match = None
+
+        for candidate_y in CENTER_SLOT_Y_CANDIDATES:
+            slot_variant = dict(slot)
+            slot_variant["y"] = candidate_y
+
+            x, y, w, h = map_roi(slot_variant, shot_w, shot_h, 1920, 1080)
+            crop = img[y:y + h, x:x + w]
+            result = detect_card_in_slot(crop, rank_templates, suit_templates)
+
+            if (
+                best_match is None
+                or result["conf"] > best_match["result"]["conf"]
+            ):
+                best_match = {
+                    "result": result,
+                    "coords": (x, y, w, h),
+                    "candidate_y": candidate_y,
+                }
+
+        result = best_match["result"]
+        x, y, w, h = best_match["coords"]
 
         conf = result["conf"]
         card = result["card"]
@@ -41,7 +61,9 @@ def main():
             result["card"] = None
 
         label = card if is_confident else "no match"
-        print(f"Slot {idx}: {label} (conf={conf:.2f})")
+        print(
+            f"Slot {idx}: {label} (conf={conf:.2f}, y={best_match['candidate_y']})"
+        )
 
         cv.rectangle(annotated, (x, y), (x + w, y + h), (0, 255, 0), 2)
         cv.putText(
