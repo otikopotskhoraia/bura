@@ -28,6 +28,14 @@ ROI = {
         {"x": 973, "y": 791, "w": 113, "h": 145},
         {"x": 1091,"y": 791, "w": 113, "h": 145},
     ],
+    # New: table slots for cards played to the middle of the table.  These use
+    # the same x-offsets as the player hand, but are vertically centered on the
+    # felt so cards laid on the table are fully captured for recognition.
+    "centerSlots": [
+        {"x": 855, "y": 530, "w": 113, "h": 145},
+        {"x": 973, "y": 530, "w": 113, "h": 145},
+        {"x": 1091,"y": 530, "w": 113, "h": 145},
+    ],
 }
 
 THRESH = {
