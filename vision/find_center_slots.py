@@ -6,6 +6,8 @@ from .config import ROI
 from .detect import map_roi
 from .templates import rank_templates, suit_templates
 
+CONF_THRESHOLD = 0.9
+
 
 def main():
     if len(sys.argv) < 2:
@@ -29,8 +31,16 @@ def main():
         crop = img[y:y + h, x:x + w]
         result = detect_card_in_slot(crop, rank_templates, suit_templates)
 
-        label = result["card"] or "(no match)"
         conf = result["conf"]
+        card = result["card"]
+        is_confident = bool(card) and conf >= CONF_THRESHOLD
+
+        if not is_confident:
+            # Treat low-confidence identifications as misses so downstream
+            # consumers don't mistake them for genuine matches.
+            result["card"] = None
+
+        label = card if is_confident else "no match"
         print(f"Slot {idx}: {label} (conf={conf:.2f})")
 
         cv.rectangle(annotated, (x, y), (x + w, y + h), (0, 255, 0), 2)
