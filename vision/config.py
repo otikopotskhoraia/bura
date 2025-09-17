@@ -24,9 +24,9 @@ ROI = {
         # cards, which meant the rank/suit glyphs were cut off and template
         # matching struggled.  Shift the slot windows downward so each card is
         # fully captured.
-        {"x": 855, "y": 791, "w": 113, "h": 145},
-        {"x": 973, "y": 791, "w": 113, "h": 145},
-        {"x": 1091,"y": 791, "w": 113, "h": 145},
+        {"x": 855, "y": 370, "w": 113, "h": 180},
+        {"x": 973, "y": 370, "w": 113, "h": 180},
+        {"x": 1091,"y": 370, "w": 113, "h": 180},
     ],
     # New: table slots for cards played to the middle of the table.  These use
     # the same x-offsets as the player hand, but are vertically centered on the
